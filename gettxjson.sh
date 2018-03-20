@@ -1,0 +1,1 @@
+python sight.py $1|grep "Prev. Tx Hash:"|sed -e 's/[ \t]*Prev\. Tx Hash:[ \t]*//g'|sort|uniq|while read line ; do jsontx=$(bitcoin-cli getrawtransaction "$line" 1|tr '\n' '\r'|sed -e 's/[\n\r]//g'); aws firehose put-record --delivery-stream-name awsgluedemobitcointx --region us-east-1 --record Data="'${jsontx}'" ; done
